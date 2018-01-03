@@ -5,42 +5,29 @@
  */
 
 import React, {Component} from 'react';
-import {
-    FlatList,
-    Platform,
-    StyleSheet,
-    Text,
-    View
-} from 'react-native';
+import {FlatList, StyleSheet, View} from 'react-native';
+import BookItem from "./BookItem";
 
 export default class App extends Component<{}> {
     constructor(props) {
         super(props);
         this.state = {
-            data: [
-                {key: "a"},
-                {key: "b"},
-                {key: "c"},
-                {key: "d"},
-                {key: "a longer example"},
-                {key: "e"},
-                {key: "f"},
-                {key: "g"},
-                {key: "h"},
-                {key: "i"},
-                {key: "j"},
-                {key: "k"},
-                {key: "l"},
-                {key: "m"},
-                {key: "n"},
-                {key: "o"},
-                {key: "p"}
-            ]
+            data: this._addKeysToBooks(mockBooks)
         };
     }
 
-    _renderItem = data => {
-        return <Text style={styles.row}>{data.item.key}</Text>;
+    _renderItem = ({item}) => {
+        return <BookItem
+            coverURL={item.book_image}
+            title={item.key}
+            author={item.author}
+        />
+    };
+
+    _addKeysToBooks = books => {
+        return books.map(book => {
+            return Object.assign(book, {key: book.title});
+        });
     };
 
     render() {
@@ -54,22 +41,27 @@ export default class App extends Component<{}> {
     }
 }
 
+const mockBooks = [
+    {
+        rank: 1,
+        title: "GATHERING PREY",
+        author: "John Sandford",
+        book_image:
+            "https://reactjs.org/static/tictac-numbers-685df774da6da48f451356f33f4be8b2-be875.png"
+    },
+    {
+        rank: 2,
+        title: "MEMORY MAN",
+        author: "David Baldacci",
+        book_image:
+            "https://reactjs.org/static/tictac-numbers-685df774da6da48f451356f33f4be8b2-be875.png"
+    }
+];
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#F5FCFF',
-    },
-    welcome: {
-        fontSize: 20,
-        textAlign: 'center',
-        margin: 10,
-    },
-    row: {fontSize: 24, padding: 42, borderWidth: 1, borderColor: "#DDDDDD"},
-    instructions: {
-        textAlign: 'center',
-        color: '#333333',
-        marginBottom: 5,
-    },
+        backgroundColor: '#F5FCFF'
+    }
 });
