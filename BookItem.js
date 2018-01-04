@@ -34,5 +34,5 @@ const styles = StyleSheet.create({
         padding: 20
     },
     author: {fontSize: 18},
-    title: {fontSize: 18, fontWeight: "bold"}
+    title: {paddingTop: 20, fontSize: 18, fontWeight: "bold"}
 });

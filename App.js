@@ -7,23 +7,34 @@
 import React, {Component} from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
 import BookItem from "./BookItem";
+import Douban from "./Douban";
 
 export default class App extends Component<{}> {
     constructor(props) {
         super(props);
         this.state = {
             data: this._addKeysToBooks(mockBooks)
+            // data: []
         };
+    }
+
+    componentDidMount() {
+        // this._refreshData();
     }
 
     _renderItem = ({item}) => {
         return <BookItem
-            coverURL={item.book_image}
+            coverURL={item.images.small}
             title={item.key}
-            author={item.author}
+            author={item.genres[0]}
         />
     };
 
+    _refreshData = () => {
+        Douban.fetchBooks("北京", 0, 20).then(books => {
+            this.setState({data: this._addKeysToBooks(books)});
+        });
+    };
     _addKeysToBooks = books => {
         return books.map(book => {
             return Object.assign(book, {key: book.title});
@@ -43,18 +54,14 @@ export default class App extends Component<{}> {
 
 const mockBooks = [
     {
-        rank: 1,
-        title: "GATHERING PREY",
-        author: "John Sandford",
-        book_image:
-            "https://reactjs.org/static/tictac-numbers-685df774da6da48f451356f33f4be8b2-be875.png"
+        title: "前任3：再见前任",
+        genres: ["喜剧", "剧情"],
+        images: {small: "https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2508926717.jpg"}
     },
     {
-        rank: 2,
-        title: "MEMORY MAN",
-        author: "David Baldacci",
-        book_image:
-            "https://reactjs.org/static/tictac-numbers-685df774da6da48f451356f33f4be8b2-be875.png"
+        title: "芳华",
+        genres: ["剧情"],
+        images: {small: "https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2507227732.jpg"}
     }
 ];
 
