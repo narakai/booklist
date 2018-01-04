@@ -13,13 +13,13 @@ export default class App extends Component<{}> {
     constructor(props) {
         super(props);
         this.state = {
-            data: this._addKeysToBooks(mockBooks)
-            // data: []
+            // data: this._addKeysToBooks(mockBooks)
+            data: []
         };
     }
 
     componentDidMount() {
-        // this._refreshData();
+        this._refreshData();
     }
 
     _renderItem = ({item}) => {
