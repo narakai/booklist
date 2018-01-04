@@ -5,7 +5,7 @@
  */
 
 import React, {Component} from 'react';
-import {FlatList, StyleSheet, View} from 'react-native';
+import {SectionList, StyleSheet, Text, View} from 'react-native';
 import BookItem from "./BookItem";
 import Douban from "./Douban";
 
@@ -14,7 +14,8 @@ export default class App extends Component<{}> {
         super(props);
         this.state = {
             // data: this._addKeysToBooks(mockBooks)
-            data: []
+            // data: []
+            sections: []
         };
     }
 
@@ -30,11 +31,39 @@ export default class App extends Component<{}> {
         />
     };
 
-    _refreshData = () => {
-        Douban.fetchBooks("北京", 0, 20).then(books => {
-            this.setState({data: this._addKeysToBooks(books)});
-        });
+    _renderHeader = ({section}) => {
+        return (
+            <Text style={styles.headingText}>
+                {section.title}
+            </Text>
+        );
     };
+
+    _refreshData = () => {
+        Promise.all([
+            Douban.fetchBooks("北京", 0, 20),
+            Douban.fetchBooks("广州", 0, 20)
+        ])
+            .then(results => {
+                if (results.length !== 2) {
+                    console.error("Unexpected results");
+                }
+                this.setState({
+                        sections: [
+                            {
+                                title: "北京",
+                                data: this._addKeysToBooks(results[0])
+                            },
+                            {
+                                title: "成都",
+                                data: this._addKeysToBooks(results[1])
+                            }
+                        ]
+                    }
+                );
+            });
+    };
+
     _addKeysToBooks = books => {
         return books.map(book => {
             return Object.assign(book, {key: book.title});
@@ -44,9 +73,11 @@ export default class App extends Component<{}> {
     render() {
         return (
             <View style={styles.container}>
-                <FlatList
-                    data={this.state.data}
-                    renderItem={this._renderItem}/>
+                <SectionList
+                    sections={this.state.sections}
+                    renderItem={this._renderItem}
+                    renderSectionHeader={this._renderHeader}
+                />
             </View>
         );
     }
@@ -66,9 +97,15 @@ const mockBooks = [
 ];
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        backgroundColor: '#F5FCFF'
+    container: {flex: 1, paddingTop: 22},
+    headingText: {
+        fontSize: 24,
+        alignSelf: "center",
+        backgroundColor: "#FFF",
+        fontWeight: "bold",
+        paddingLeft: 20,
+        paddingRight: 20,
+        paddingTop: 2,
+        paddingBottom: 2
     }
 });
