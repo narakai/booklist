@@ -41,8 +41,8 @@ export default class App extends Component<{}> {
 
     _refreshData = () => {
         Promise.all([
-            Douban.fetchBooks("北京", 0, 20),
-            Douban.fetchBooks("广州", 0, 20)
+            Douban.fetchBooks("北京", 0, 10),
+            Douban.fetchBooks("成都", 0, 10)
         ])
             .then(results => {
                 if (results.length !== 2) {
@@ -74,6 +74,7 @@ export default class App extends Component<{}> {
         return (
             <View style={styles.container}>
                 <SectionList
+                    stickySectionHeadersEnabled={false}
                     sections={this.state.sections}
                     renderItem={this._renderItem}
                     renderSectionHeader={this._renderHeader}
